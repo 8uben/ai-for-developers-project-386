@@ -21,9 +21,15 @@ export async function fetchPublicEventTypes(): Promise<Result<EventType[]>> {
 }
 
 export async function fetchSlots(eventTypeId: string): Promise<Result<Slot[]>> {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { data, error, response } = await api.GET(
     "/public/event-types/{eventTypeId}/slots",
-    { params: { path: { eventTypeId } } },
+    {
+      params: {
+        path: { eventTypeId },
+        query: { timezone } as never,
+      },
+    },
   );
   if (error || !data) return fail(describeError(response.status, error));
   return ok(data);

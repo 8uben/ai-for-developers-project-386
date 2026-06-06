@@ -40,7 +40,7 @@ export function Layout() {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Main>
+      <AppShell.Main style={{ background: "#f8f9fa" }}>
         <Outlet />
       </AppShell.Main>
     </AppShell>

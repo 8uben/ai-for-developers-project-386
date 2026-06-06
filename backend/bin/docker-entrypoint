@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+echo "Waiting for database..."
+until bin/rails db:create db:migrate 2>/dev/null; do
+  sleep 2
+done
+echo "Database ready."
+
+exec "$@"

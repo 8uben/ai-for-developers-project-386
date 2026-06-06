@@ -46,7 +46,7 @@ export function AdminLayout() {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Main>
+      <AppShell.Main style={{ background: "#f8f9fa" }}>
         <Container size="md">
           <SegmentedControl
             value={activeTab}

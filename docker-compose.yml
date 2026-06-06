@@ -1,28 +1,49 @@
-# Локальный запуск фронтенда против mock-сервера Prism, поднятого из контракта.
-# Prism играет роль "отдельно запущенного бэкенда": валидирует запросы по OpenAPI
-# и отдаёт примеры ответов согласно контракту.
 services:
-  prism:
-    image: stoplight/prism:5
-    # -m false: одиночный процесс (multiprocess-режим несовместим с этим образом).
-    command: mock -h 0.0.0.0 -p 4010 -m false /tmp/openapi.yaml
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: rails
+      POSTGRES_PASSWORD: rails
+      POSTGRES_DB: backend_development
     volumes:
-      - ./openapi.yaml:/tmp/openapi.yaml:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rails -d backend_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://rails:rails@db:5432
+      RAILS_LOG_TO_STDOUT: "true"
     ports:
-      - "4010:4010"
+      - "3000:3000"
+    volumes:
+      - ./backend:/rails
+      - backend_bundle:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
 
   frontend:
     build:
       context: ./frontend
     environment:
-      # Фронтенд ходит в API только через этот базовый URL (по контракту).
-      VITE_API_BASE_URL: http://localhost:4010
-    volumes:
-      - ./frontend/src:/app/src:ro
+      VITE_API_BASE_URL: http://localhost:3000
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src:ro
     depends_on:
-      - prism
+      - backend
+
+volumes:
+  postgres_data:
+  backend_bundle:
 
 networks:
   default:
