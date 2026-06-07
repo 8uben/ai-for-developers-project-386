@@ -5,7 +5,7 @@ import type { components, paths } from "./schema";
  * Базовый URL отдельно запущенного бэкенда (или Prism mock-сервера).
  * Задаётся через переменную окружения сборки Vite.
  */
-const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4010";
+const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /** Типизированный HTTP-клиент, сгенерированный из контракта (OpenAPI). */
 export const api = createClient<paths>({ baseUrl });

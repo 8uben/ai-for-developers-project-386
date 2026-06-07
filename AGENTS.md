@@ -38,3 +38,15 @@ Booking service where an Owner configures event types and Guests book slots.
 - The root `package.json` manages the API contract and e2e tests.
 - Frontend uses `openapi-fetch` with types generated from `openapi.yaml`.
 - Database: SQLite3.
+
+## Docker / Deploy
+
+- **Production Dockerfile**: `/Dockerfile` (multi-stage: builds frontend, then backend).
+- При запуске контейнера автоматически выполняются миграции (`db:prepare`) и стартует Puma.
+- Порт задаётся через переменную окружения `PORT` (по умолчанию 3000).
+- Фронтенд (React SPA) встроен в образ и отдаётся Rails из `public/`.
+- **SPA fallback**: middleware `SpaFallback` отдаёт `index.html` для всех не-API маршрутов (React Router).
+
+### Публичный URL
+
+**Текущий деплой**: https://call-booking-4je6.onrender.com
