@@ -13,13 +13,13 @@ RUN npm run build
 FROM ruby:3.4-slim
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential libsqlite3-dev libyaml-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential libpq-dev libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 WORKDIR /rails
 
 COPY backend/Gemfile backend/Gemfile.lock ./
-RUN bundle install
+RUN bundle install --without development test
 
 COPY backend/ ./
 
