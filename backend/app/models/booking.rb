@@ -9,6 +9,7 @@ class Booking < ApplicationRecord
   validate :start_on_slot_grid
   validate :slot_not_taken
 
+  before_validation :generate_id, on: :create
   before_validation :calculate_end
 
   def as_json(options = {})
@@ -24,6 +25,10 @@ class Booking < ApplicationRecord
   end
 
   private
+
+  def generate_id
+    self.id ||= SecureRandom.uuid
+  end
 
   def calculate_end
     return unless event_type && start

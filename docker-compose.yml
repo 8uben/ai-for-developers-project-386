@@ -1,33 +1,14 @@
 services:
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: rails
-      POSTGRES_PASSWORD: rails
-      POSTGRES_DB: backend_development
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rails -d backend_development"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   backend:
     build:
       context: ./backend
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://rails:rails@db:5432
       RAILS_LOG_TO_STDOUT: "true"
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/rails
-      - backend_bundle:/usr/local/bundle
-    depends_on:
-      db:
-        condition: service_healthy
 
   frontend:
     build:
@@ -40,10 +21,6 @@ services:
       - ./frontend/src:/app/src:ro
     depends_on:
       - backend
-
-volumes:
-  postgres_data:
-  backend_bundle:
 
 networks:
   default:
