@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: call-booking
+    runtime: image
+    repo: https://github.com/hexlet/ai-for-developers-project-386
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
