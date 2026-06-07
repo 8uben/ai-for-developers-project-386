@@ -19,7 +19,7 @@ RUN apt-get update -qq && \
 WORKDIR /rails
 
 COPY backend/Gemfile backend/Gemfile.lock ./
-RUN bundle install --without development test
+RUN bundle config set without 'development test' && bundle install
 
 COPY backend/ ./
 
